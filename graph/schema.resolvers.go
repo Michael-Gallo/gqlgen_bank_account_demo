@@ -18,6 +18,9 @@ func (r *mutationResolver) CreateBankAccount(ctx context.Context, application mo
 	rand, _ := rand.Int(rand.Reader, big.NewInt(100))
 
 	var openingDeposit float64
+	// Because openingDeposit is defined as a pointer and optional in the schema
+	// The case where it is a nil pointer and dereferencing crashes the program
+	// Must be accounted for
 	if application.OpeningDeposit != nil {
 		openingDeposit = *application.OpeningDeposit
 	}
