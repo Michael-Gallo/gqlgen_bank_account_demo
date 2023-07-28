@@ -45,7 +45,7 @@ func (r *mutationResolver) CreateBankAccount(ctx context.Context, application mo
 	response := model.CreateBankAccountResponse{
 		Code:    200,
 		Success: true,
-		Message: fmt.Sprintf("Successfully created a bank account for %v with an opening balance of $%v", bankAccount.Owner.Name, bankAccount.Balance),
+		Message: fmt.Sprintf("Successfully created bank account %v for %v with an opening balance of $%v", bankAccount.ID, bankAccount.Owner.Name, bankAccount.Balance),
 	}
 	return &response, nil
 }
@@ -53,6 +53,17 @@ func (r *mutationResolver) CreateBankAccount(ctx context.Context, application mo
 // BankAccounts is the resolver for the bankAccounts field.
 func (r *queryResolver) BankAccounts(ctx context.Context) ([]*model.BankAccount, error) {
 	return r.bankAccounts, nil
+}
+
+// BankAccount is the resolver for the BankAccount field.
+func (r *queryResolver) BankAccount(ctx context.Context, id string) (*model.BankAccount, error) {
+	for _, account := range r.bankAccounts {
+		if account.ID == id {
+			return account, nil
+		}
+
+	}
+	panic(fmt.Errorf("account with id %v not found", id))
 }
 
 // Mutation returns MutationResolver implementation.
