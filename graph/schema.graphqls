@@ -1,32 +1,12 @@
-# GraphQL schema example
-#
-# https://gqlgen.com/getting-started/
-
-type Todo {
-  id: ID!
-  text: String!
-  done: Boolean!
-  user: User!
-}
-
-type User {
-  id: ID!
-  name: String!
-}
 
 type Query {
-  todos: [Todo!]!
   bankAccounts: [BankAccount!]!
+  #todos: [Todo!]!
 }
 
-input NewTodo {
-  text: String!
-  userId: String!
-}
 
 type Mutation {
-  createTodo(input: NewTodo!): Todo!
-  createBankAccount(applicant: PersonInput!, openingDeposit: Float): createBankAccountResponse!
+  createBankAccount(application: BankApplication!): createBankAccountResponse!
 }
 
 type createBankAccountResponse{
@@ -45,6 +25,12 @@ type Person {
   name: String!
   age: Int
 }
+
+input BankApplication{
+  applicant: PersonInput!
+  openingDeposit: Float
+}
+
 type BankAccount {
   owner: Person!
   balance: Float!

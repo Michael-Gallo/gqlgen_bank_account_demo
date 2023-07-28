@@ -8,19 +8,14 @@ type BankAccount struct {
 	ID      string  `json:"id"`
 }
 
-type NewTodo struct {
-	Text   string `json:"text"`
-	UserID string `json:"userId"`
+type BankApplication struct {
+	Applicant      *PersonInput `json:"applicant"`
+	OpeningDeposit *float64     `json:"openingDeposit,omitempty"`
 }
 
 type PersonInput struct {
 	Name string `json:"name"`
 	Age  *int   `json:"age,omitempty"`
-}
-
-type User struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
 }
 
 type CreateBankAccountResponse struct {

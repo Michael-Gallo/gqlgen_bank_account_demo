@@ -8,5 +8,4 @@ import "github.com/michaelagallo95/bankaccount/graph/model"
 
 type Resolver struct {
 	bankAccounts []*model.BankAccount
-	todos        []*model.Todo
 }

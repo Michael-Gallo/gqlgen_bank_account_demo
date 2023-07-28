@@ -13,26 +13,27 @@ import (
 	"github.com/michaelagallo95/bankaccount/graph/model"
 )
 
-// CreateTodo is the resolver for the createTodo field.
-func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
-	rand, _ := rand.Int(rand.Reader, big.NewInt(100))
-	todo := &model.Todo{
-		Text: input.Text,
-		ID:   fmt.Sprintf("T%d", rand),
-		User: &model.User{ID: input.UserID, Name: "user " + input.UserID},
-	}
-	r.todos = append(r.todos, todo)
-	return todo, nil
-
-}
-
 // CreateBankAccount is the resolver for the createBankAccount field.
-func (r *mutationResolver) CreateBankAccount(ctx context.Context, applicant model.PersonInput, openingDeposit *float64) (*model.CreateBankAccountResponse, error) {
-
+func (r *mutationResolver) CreateBankAccount(ctx context.Context, application model.BankApplication) (*model.CreateBankAccountResponse, error) {
 	rand, _ := rand.Int(rand.Reader, big.NewInt(100))
+
+	var openingDeposit float64
+	if application.OpeningDeposit != nil {
+		openingDeposit = *application.OpeningDeposit
+	}
+	if openingDeposit < 0 {
+		response := model.CreateBankAccountResponse{
+			Code:    400,
+			Success: false,
+			Message: "Attempt to open account with negative opening deposit",
+		}
+
+		return &response, nil
+	}
+
 	bankAccount := &model.BankAccount{
-		Balance: *openingDeposit,
-		Owner:   &model.Person{Name: applicant.Name, Age: *applicant.Age},
+		Balance: openingDeposit,
+		Owner:   &model.Person{Name: application.Applicant.Name, Age: *application.Applicant.Age},
 		ID:      fmt.Sprintf("%d", rand),
 	}
 
@@ -41,24 +42,14 @@ func (r *mutationResolver) CreateBankAccount(ctx context.Context, applicant mode
 	response := model.CreateBankAccountResponse{
 		Code:    200,
 		Success: true,
-		Message: fmt.Sprintf("Successfully created a bank account for %v with an opening balance of $%v", applicant.Name, bankAccount.Balance),
+		Message: fmt.Sprintf("Successfully created a bank account for %v with an opening balance of $%v", bankAccount.Owner.Name, bankAccount.Balance),
 	}
 	return &response, nil
-}
-
-// Todos is the resolver for the todos field.
-func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
-	panic(fmt.Errorf("not implemented: Todos - todos"))
 }
 
 // BankAccounts is the resolver for the bankAccounts field.
 func (r *queryResolver) BankAccounts(ctx context.Context) ([]*model.BankAccount, error) {
 	return r.bankAccounts, nil
-}
-
-// User is the resolver for the user field.
-func (r *todoResolver) User(ctx context.Context, obj *model.Todo) (*model.User, error) {
-	panic(fmt.Errorf("not implemented: User - user"))
 }
 
 // Mutation returns MutationResolver implementation.
@@ -67,9 +58,5 @@ func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 // Query returns QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
-// Todo returns TodoResolver implementation.
-func (r *Resolver) Todo() TodoResolver { return &todoResolver{r} }
-
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
-type todoResolver struct{ *Resolver }
