@@ -63,7 +63,7 @@ func (r *queryResolver) BankAccount(ctx context.Context, id string) (*model.Bank
 		}
 
 	}
-	panic(fmt.Errorf("account with id %v not found", id))
+	return nil, fmt.Errorf("account not found")
 }
 
 // Mutation returns MutationResolver implementation.

@@ -1,7 +1,7 @@
 
 type Query {
   bankAccounts: [BankAccount!]!
-  BankAccount(id: ID!): BankAccount!
+  BankAccount(id: ID!): BankAccount
   #todos: [Todo!]!
 }
 

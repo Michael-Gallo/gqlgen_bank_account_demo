@@ -750,14 +750,11 @@ func (ec *executionContext) _Query_BankAccount(ctx context.Context, field graphq
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.BankAccount)
 	fc.Result = res
-	return ec.marshalNBankAccount2ᚖgithubᚗcomᚋmichaelagallo95ᚋbankaccountᚋgraphᚋmodelᚐBankAccount(ctx, field.Selections, res)
+	return ec.marshalOBankAccount2ᚖgithubᚗcomᚋmichaelagallo95ᚋbankaccountᚋgraphᚋmodelᚐBankAccount(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_BankAccount(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3100,9 +3097,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_BankAccount(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
 				return res
 			}
 
@@ -3518,10 +3512,6 @@ func (ec *executionContext) _createBankAccountResponse(ctx context.Context, sel 
 
 // region    ***************************** type.gotpl *****************************
 
-func (ec *executionContext) marshalNBankAccount2githubᚗcomᚋmichaelagallo95ᚋbankaccountᚋgraphᚋmodelᚐBankAccount(ctx context.Context, sel ast.SelectionSet, v model.BankAccount) graphql.Marshaler {
-	return ec._BankAccount(ctx, sel, &v)
-}
-
 func (ec *executionContext) marshalNBankAccount2ᚕᚖgithubᚗcomᚋmichaelagallo95ᚋbankaccountᚋgraphᚋmodelᚐBankAccountᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.BankAccount) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -3936,6 +3926,13 @@ func (ec *executionContext) marshalNcreateBankAccountResponse2ᚖgithubᚗcomᚋ
 		return graphql.Null
 	}
 	return ec._createBankAccountResponse(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOBankAccount2ᚖgithubᚗcomᚋmichaelagallo95ᚋbankaccountᚋgraphᚋmodelᚐBankAccount(ctx context.Context, sel ast.SelectionSet, v *model.BankAccount) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._BankAccount(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
