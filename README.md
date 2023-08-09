@@ -12,3 +12,13 @@ Any change to the schema should be followed with
 ```bash
 go run github.com/99designs/gqlgen generate
 ```
+
+## Running with Docker
+Build the image with
+```bash
+docker build -t gqldemo .
+```
+
+Run the image and forward port 8080 with
+```bash
+docker run -p 8080:8080 gqldemo```
